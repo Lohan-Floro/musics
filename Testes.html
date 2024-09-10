@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Músicas</title>
+    <style>
+        /* Estilo geral da página */
+        body {
+            background-color: black; /* Fundo preto */
+            color: white; /* Texto branco */
+            font-family: Arial, sans-serif; /* Fonte padrão */
+            margin: 0; /* Remove margem padrão */
+            padding: 0; /* Remove padding padrão */
+            display: flex;
+            flex-direction: column; /* Organiza os elementos em coluna */
+            align-items: center; /* Centraliza os elementos horizontalmente */
+            justify-content: center; /* Centraliza os elementos verticalmente */
+        }
+
+        /* Estilo do cabeçalho */
+        header {
+            width: 100%; /* Ocupa toda a largura da página */
+            padding: 20px 0; /* Espaço interno ao redor do banner */
+            background-color: black; /* Fundo do cabeçalho */
+            text-align: center; /* Centraliza o conteúdo */
+        }
+
+        /* Estilo da imagem do banner */
+        .banner img {
+            width: 50%; /* Ajuste do tamanho da imagem da coroa */
+            max-width: 600px; /* Largura máxima da imagem */
+            height: auto; /* Manter proporção da imagem */
+        }
+
+        /* Estilo da barra de pesquisa */
+        .search-bar {
+            margin: 20px 0; /* Espaçamento vertical ao redor da barra de pesquisa */
+            text-align: center; /* Centraliza a barra de pesquisa */
+        }
+
+        /* Estilo do input da barra de pesquisa */
+        .search-bar input[type="text"] {
+            width: 300px; /* Largura da barra de pesquisa */
+            padding: 10px; /* Espaçamento interno */
+            font-size: 16px; /* Tamanho da fonte */
+            border-radius: 8px; /* Arredonda os cantos do input */
+            border: none; /* Remove bordas padrão */
+            background-color: #333; /* Fundo da barra de pesquisa */
+            color: white; /* Cor do texto */
+        }
+
+        /* Estilo do botão de pesquisa */
+        .search-bar input[type="submit"] {
+            padding: 10px 20px; /* Espaçamento interno */
+            font-size: 16px; /* Tamanho da fonte */
+            border-radius: 8px; /* Arredonda os cantos do botão */
+            border: none; /* Remove bordas padrão */
+            background-color: rgb(166, 255, 0); /* Fundo do botão */
+            color: black; /* Cor do texto */
+            cursor: pointer; /* Cursor de ponteiro ao passar o mouse */
+            margin-left: 10px; /* Espaçamento entre o input e o botão */
+        }
+
+        /* Estilo do container principal */
+        .container {
+            display: flex; /* Usa flexbox para layout */
+            flex-direction: row; /* Alinha os elementos em linha */
+            align-items: flex-start; /* Alinha os itens no topo */
+            padding: 20px 0; /* Espaçamento vertical do container */
+        }
+
+        /* Estilo das imagens no container principal */
+        .container .grid-container img {
+            width: 150px; /* Define uma largura fixa para todas as imagens */
+            height: 150px; /* Define uma altura fixa para todas as imagens */
+            object-fit: cover; /* Corta as imagens para preencher o tamanho definido, mantendo a proporção */
+            margin: 10px; /* Adiciona margem ao redor das imagens */
+            border-radius: 8px; /* Arredonda os cantos das imagens */
+            transition: transform 0.2s ease-in-out; /* Animação suave ao passar o mouse */
+        }
+
+        /* Efeito ao passar o mouse sobre as imagens */
+        .container .grid-container img:hover {
+            transform: scale(1.05); /* Aumenta ligeiramente o tamanho da imagem */
+        }
+
+        /* Estilo da grade de imagens */
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); /* Layout de grade adaptável */
+            gap: 20px; /* Espaçamento entre os itens da grade */
+            max-width: 800px; /* Largura máxima da grade */
+            margin-right: 20px; /* Espaçamento à direita para separar da lista */
+        }
+
+        /* Estilo de cada item da grade */
+        .grid-item {
+            text-align: center; /* Centraliza o texto em cada item */
+        }
+
+        /* Estilo do texto em cada item da grade */
+        .grid-item p {
+            margin: 10px 0 0 0; /* Espaçamento acima do texto, sem margem nas laterais e abaixo */
+            font-size: 16px; /* Tamanho da fonte do texto */
+        }
+
+        /* Estilo da lista de nomes */
+        .name-list-container {
+            display: flex; /* Usa flexbox para layout */
+            flex-direction: column; /* Alinha o título e a lista em coluna */
+            align-items: flex-start; /* Alinha o título e a lista à esquerda */
+        }
+
+        .name-list {
+            max-height: 80vh; /* Limita a altura da lista */
+            overflow-y: auto; /* Adiciona rolagem vertical se necessário */
+            width: 200px; /* Largura fixa para a lista */
+            padding: 10px; /* Espaçamento interno */
+            background-color: #222; /* Fundo da lista */
+            border-radius: 8px; /* Arredonda os cantos da lista */
+            list-style: none; /* Remove marcadores da lista */
+            margin: 0; /* Remove margem padrão */
+            padding: 0; /* Remove padding padrão */
+        }
+
+        /* Estilo dos itens da lista */
+        .name-list li {
+            margin: 10px 0; /* Espaçamento acima e abaixo dos itens da lista */
+            font-size: 16px; /* Tamanho da fonte dos itens */
+            cursor: pointer; /* Cursor de ponteiro ao passar o mouse */
+            transition: color 0.2s ease-in-out; /* Transição suave de cor ao passar o mouse */
+        }
+
+        /* Efeito ao passar o mouse sobre os itens da lista */
+        .name-list li:hover {
+            color: rgb(166, 255, 0); /* Muda a cor do texto ao passar o mouse */
+        }
+
+        /* Estilo do título da lista de nomes */
+        .name-list-title {
+            font-size: 18px; /* Tamanho da fonte do título */
+            margin-bottom: 10px; /* Espaçamento abaixo do título */
+            text-transform: uppercase; /* Transforma o texto em maiúsculas */
+            font-weight: bold; /* Torna o texto negrito */
+        }
+    </style>
+    <script>
+        // Função para buscar os dados do Google Sheets para a grade de imagens
+        async function fetchGoogleSheetsData() {
+            try {
+                const response = await fetch('https://docs.google.com/spreadsheets/d/1NmrIiw1z1tVtvEMCMIfslmHzUIYtZKDEO9NG0hU_oCU/pub?gid=421577297&single=true&output=csv');
+                const data = await response.text();
+
+                const rows = data.split(/\r?\n/).slice(1); // Divide os dados por linha, lida tanto com \r\n quanto com \n
+                const gridContainer = document.querySelector('.grid-container');
+
+                rows.forEach(row => {
+                    const [nome, imagem, link] = row.split(','); // Supondo que as colunas estão na ordem Nome, Imagem, Link
+
+                    if (nome && imagem && link) { // Verifica se todas as informações estão presentes
+                        const gridItem = document.createElement('div');
+                        gridItem.className = 'grid-item';
+
+                        const anchor = document.createElement('a');
+                        anchor.href = link.trim(); // Remove espaços em branco ao redor do link
+                        anchor.target = '_blank'; // Abre o link em uma nova aba
+
+                        const img = document.createElement('img');
+                        img.src = imagem.trim(); // Remove espaços em branco ao redor do link da imagem
+                        img.alt = nome.trim();
+
+                        const p = document.createElement('p');
+                        p.textContent = nome.trim();
+
+                        anchor.appendChild(img);
+                        gridItem.appendChild(anchor);
+                        gridItem.appendChild(p);
+
+                        gridContainer.appendChild(gridItem);
+                    }
+                });
+            } catch (error) {
+                console.error('Erro ao buscar dados do Google Sheets:', error);
+            }
+        }
+
+        // Função para buscar os dados da lista de nomes
+        async function fetchArtistNames() {
+            try {
+                const response = await fetch('https://docs.google.com/spreadsheets/d/e/2PACX-1vRDoeBp8QNJ3Kb84j8_OhhD3XtR1v5dACmIhmpAhBDfDtO2G3v3gIQzqwt7uVUzTyyhn7dRKpJ7CtCf/pub?output=csv');
+                const data = await response.text();
+
+                const rows = data.split(/\r?\n/).slice(1); // Divide os dados por linha, lida tanto com \r\n quanto com \n
+                const nameList = document.querySelector('.name-list');
+
+                rows.forEach(row => {
+                    const columns = row.split(','); // Divide a linha em colunas
+                    const nome = columns[2]; // Pega o nome da terceira coluna
+
+                    if (nome) { // Verifica se o nome está presente
+                        const listItem = document.createElement('li');
+                        listItem.textContent = nome.trim(); // Remove espaços em branco ao redor do nome
+                        nameList.appendChild(listItem);
+                    }
+                });
+            } catch (error) {
+                console.error('Erro ao buscar nomes dos artistas:', error);
+            }
+        }
+
+        // Função para filtrar as músicas com base na barra de pesquisa
+        function searchMusic() {
+            let input = document.getElementById('searchInput').value.toLowerCase();
+            let items = document.getElementsByClassName('grid-item');
+            
+            // Loop através de todos os itens e exibe apenas aqueles que correspondem à pesquisa
+            for (let i = 0; i < items.length; i++) {
+                let item = items[i];
+                let text = item.getElementsByTagName('p')[0].textContent.toLowerCase();
+                
+                if (text.includes(input)) {
+                    item.style.display = '';
+                } else {
+                    item.style.display = 'none';
+                }
+            }
+        }
+
+        // Chama as funções para buscar os dados quando a página carregar
+        window.onload = () => {
+            fetchGoogleSheetsData();
+            fetchArtistNames();
+        };
+    </script>
+</head>
+<body>
+
+<header>
+    <!-- Banner com a imagem da coroa -->
+    <div class="banner">
+        <img src="https://music-flloro.s3.us-east-2.amazonaws.com/b69fefbbfa5f5f08db78779f256df739.jpg" alt="Coroa">
+    </div>
+</header>
+
+<!-- Barra de pesquisa -->
+<div class="search-bar">
+    <input type="text" id="searchInput" onkeyup="searchMusic()" placeholder="Pesquisar artista...">
+    <input type="submit" value="Pesquisar" onclick="searchMusic()">
+</div>
+
+<!-- Container principal contendo a grade de imagens e lista de nomes -->
+<div class="container">
+    <!-- Grid de artistas com imagens e legendas -->
+    <div class="grid-container">
+        <!-- Os itens da grade serão inseridos dinamicamente -->
+    </div>
+
+    <!-- Lista de nomes dos artistas -->
+    <div class="name-list-container">
+        <p class="name-list-title">Solicitações pendentes:</p>
+        <ul class="name-list">
+            <!-- Os nomes serão inseridos dinamicamente -->
+        </ul>
+    </div>
+</div>
+
+</body>
+</html>

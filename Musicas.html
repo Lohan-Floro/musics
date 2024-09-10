@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+        /* importing two Google fonts */
+        @import url('https://fonts.googleapis.com/css2?family=Ubuntu&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Varela+Round&display=swap');
+        body {
+            background-color: rgb(0, 0, 0);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        nav {
+            font-family: 'Ubuntu', sans-serif;
+        }
+
+        nav ul {
+            display: flex;
+            align-items: center;
+            list-style-type: none;
+            height: 65px;
+            background-color: rgb(0, 0, 0);
+            color: rgba(255, 0, 0, 0);
+        }
+
+        .brand img {
+            width: 44px;
+            padding: 0 8px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            font-weight: bolder;
+            font-size: 1.3rem;
+        }
+
+        .container {
+            min-height: 72vh;
+            background-color: black;
+            color: white;
+            font-family: 'Varela Round', sans-serif;
+            display: flex;
+            flex-direction: column;
+            margin: 15px auto;
+            width: 92%;
+            border-radius: 12px;
+            padding: 34px;
+        }
+
+        .bottom {
+            position: sticky;
+            bottom: 0;
+            height: 150px;
+            background-color: black;
+            color: rgb(166, 255, 0);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 10px;
+        }
+
+        .bottom audio {
+            width: 80%;
+        }
+
+        .bottom span {
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        .icons {
+            margin-top: 14px;
+        }
+
+        .icons i {
+            cursor: pointer;
+        }
+
+        #myProgressBar {
+            width: 80vw;
+            cursor: pointer;
+        }
+
+        .songItemContainer {
+            margin-top: 20px;
+        }
+
+        .songItem {
+            padding-left: 20px;
+            height: 50px;
+            width: 500px;
+            display: flex;
+            background-color: white;
+            color: black;
+            margin: 12px 0;
+            justify-content: space-between;
+            align-items: center;
+            border-radius: 12px;
+        }
+
+        .songItem.active {
+            background-color: #7bff00; /* Verde-limão */
+            color: black;
+        }
+
+        .songItem:hover {
+            background-color: #7bff00;
+            cursor: pointer;
+        }
+
+        .songItem img {
+            width: 43px;
+            margin: 0 23px;
+            border-radius: 34px;
+        }
+
+        .timestamp {
+            margin: 0 23px;
+        }
+
+        .timestamp i {
+            cursor: pointer;
+        }
+
+        .songInfo {
+            position: absolute;
+            left: 10vw;
+            font-family: 'Varela Round', sans-serif;
+        }
+
+        .songInfo img {
+            opacity: 0;
+            transition: opacity 0.4s ease-in;
+        }
+
+        .search-bar {
+            margin-bottom: 20px;
+        }
+
+        .search-bar input {
+            width: 100%;
+            padding: 10px;
+            font-size: 1rem;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+        }
+    </style>
+</head>
+<body>
+    
+    <div class="container">
+        <div class="search-bar">
+            <input type="text" id="searchInput" placeholder="Pesquisar músicas...">
+        </div>
+        <div class="songList">
+            <h1>PLAYLIST</h1>
+            <div class="songItemContainer">
+                <div class="playlist">
+                    <ul id="songList"></ul>
+                </div>
+            </div>
+        </div>
+        <div class="songBanner"></div>
+    </div>
+    <div class="bottom">
+        <span id="current-track">Escolha uma música</span>
+        <audio id="audioPlayer" controls>
+            Your browser does not support the audio element.
+        </audio>
+    </div>
+    <script src="https://kit.fontawesome.com/26504e4a1f.js" crossorigin="anonymous"></script>
+
+    <script>
+        let songs = [];
+        let currentSongIndex = 0;
+
+        async function fetchSheetData() {
+            // URL da planilha publicada
+            const sheetUrl = 'https://docs.google.com/spreadsheets/d/1NmrIiw1z1tVtvEMCMIfslmHzUIYtZKDEO9NG0hU_oCU/pub?gid=1370234928&single=true&output=csv';
+
+            try {
+                const response = await fetch(sheetUrl);
+                const data = await response.text();
+
+                // Processar os dados CSV
+                const rows = data.split('\n').map(row => row.split(','));
+
+                // Selecionar o elemento UL
+                const songList = document.getElementById('songList');
+
+                // Criar elementos <li> a partir dos dados
+                rows.forEach((row, index) => {
+                    // Ignorar a primeira linha (cabeçalho) e linhas vazias
+                    if (index === 0 || row.length < 2) return;
+
+                    const li = document.createElement('li');
+                    li.className = 'songItem';
+                    li.dataset.src = row[1]; // 2ª coluna
+                    li.dataset.title = row[0]; // 1ª coluna
+                    li.textContent = row[0]; // 1ª coluna
+
+                    // Adicionar o evento de clique
+                    li.addEventListener('click', () => {
+                        currentSongIndex = index - 1; // Ajustar o índice
+                        playSong(li.dataset.src, li.dataset.title);
+                    });
+
+                    // Adicionar o <li> à lista
+                    songList.appendChild(li);
+                });
+
+                // Salvar as músicas em uma array
+                songs = rows.slice(1).map(row => ({ title: row[0], src: row[1] }));
+
+                // Adicionar evento para tocar a próxima música quando a atual terminar
+                const audioPlayer = document.getElementById('audioPlayer');
+                audioPlayer.addEventListener('ended', playNextSong);
+
+                // Adicionar evento de input na barra de pesquisa
+                document.getElementById('searchInput').addEventListener('input', filterSongs);
+            } catch (error) {
+                console.error('Erro ao buscar dados:', error);
+            }
+        }
+
+        function playSong(src, title) {
+            const audioPlayer = document.getElementById('audioPlayer');
+            const currentTrack = document.getElementById('current-track');
+            
+            // Remover a classe 'active' do item da música atual
+            document.querySelectorAll('.songItem').forEach(item => {
+                item.classList.remove('active');
+            });
+
+            // Adicionar a classe 'active' ao item da música que está tocando
+            const songItem = [...document.querySelectorAll('.songItem')].find(item => item.dataset.title === title);
+            if (songItem) {
+                songItem.classList.add('active');
+            }
+
+            audioPlayer.src = src;
+            currentTrack.textContent = title;
+            audioPlayer.play();
+        }
+
+        function playNextSong() {
+            currentSongIndex = (currentSongIndex + 1) % songs.length;
+            const nextSong = songs[currentSongIndex];
+            playSong(nextSong.src, nextSong.title);
+        }
+
+        function filterSongs() {
+            const searchInput = document.getElementById('searchInput').value.toLowerCase();
+            const songItems = document.querySelectorAll('.songItem');
+
+            songItems.forEach(item => {
+                const title = item.dataset.title.toLowerCase();
+                if (title.includes(searchInput)) {
+                    item.style.display = '';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        }
+
+        // Chamar a função ao carregar a página
+        fetchSheetData();
+    </script>
+</body>
+</html>
