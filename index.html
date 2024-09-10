@@ -62,9 +62,8 @@
         }
 
         .banner {
-            width: 100%;
-            height: 300px;
-            background-image: url('/mnt/data/Vizer.webp');
+            width: 80%; /* Define a largura do banner (você pode ajustar conforme necessário) */
+            height: 400px; /* Altura ajustada para se aproximar do exemplo da imagem */
             background-size: cover;
             background-position: center;
             display: flex;
@@ -72,6 +71,8 @@
             justify-content: center;
             margin-bottom: 40px;
             transition: transform 0.3s;
+            border-radius: 40px; /* Adiciona as bordas arredondadas */
+            overflow: hidden; /* Garante que a imagem não ultrapasse os limites arredondados */
         }
 
         .banner:hover {
@@ -178,10 +179,11 @@
         <input type="text" id="searchInput" placeholder="Pesquisar" onkeydown="handleSearch(event)">
     </div>
 
-    <!-- Banner com link -->
-    <a href="https://music-flloro.s3.us-east-2.amazonaws.com/b69fefbbfa5f5f08db78779f256df739.jpg" target="_blank">
-        <div class="banner"></div>
-    </a>
+    <!-- Image inside the banner -->
+        <a>
+            <img src="https://music-flloro.s3.us-east-2.amazonaws.com/banner_postagem.jpg" alt="Banner Image" style="width: 100%; height: auto;">
+        </div>
+        </a>
 
     <!-- Seção de últimos lançamentos de filmes -->
     <div class="latest-releases">
